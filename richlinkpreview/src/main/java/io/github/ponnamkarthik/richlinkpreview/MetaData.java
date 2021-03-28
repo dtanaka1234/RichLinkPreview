@@ -1,10 +1,15 @@
 package io.github.ponnamkarthik.richlinkpreview;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by ponna on 16-01-2018.
  */
 
 public class MetaData {
+
+    public static Map<String, MetaData> cache = new HashMap<>();
 
     private String url = "";
     private String imageurl = "";

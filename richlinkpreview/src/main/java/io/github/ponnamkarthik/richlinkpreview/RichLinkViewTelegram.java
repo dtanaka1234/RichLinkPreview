@@ -160,24 +160,31 @@ public class RichLinkViewTelegram extends RelativeLayout {
 
     public void setLink(String url, final ViewListener viewListener) {
         main_url = url;
-        RichPreview richPreview = new RichPreview(new ResponseListener() {
-            @Override
-            public void onData(MetaData metaData) {
-                meta = metaData;
 
-                if(!meta.getTitle().isEmpty() && !meta.getTitle().equals("")) {
-                    viewListener.onSuccess(true);
+        if (MetaData.cache.containsKey(url)) {
+            meta = MetaData.cache.get(url);
+            initView();
+        } else {
+            RichPreview richPreview = new RichPreview(new ResponseListener() {
+                @Override
+                public void onData(MetaData metaData) {
+                    meta = metaData;
+
+                    if(!meta.getTitle().isEmpty() && !meta.getTitle().equals("")) {
+                        viewListener.onSuccess(true);
+                        MetaData.cache.put(main_url, metaData);
+                    }
+
+                    initView();
                 }
 
-                initView();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                viewListener.onError(e);
-            }
-        });
-        richPreview.getPreview(url);
+                @Override
+                public void onError(Exception e) {
+                    viewListener.onError(e);
+                }
+            });
+            richPreview.getPreview(url);
+        }
     }
 
     private static void removeUnderlines(Spannable p_Text) {
